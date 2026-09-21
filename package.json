@@ -1,7 +1,7 @@
 {
   "name": "dsh-plugin-image-ctx-menu",
   "version": "0.1.0",
-  "description": "图片右键菜单：会话图片右键复制原图到剪贴板、另存为到本地（中英双语）",
+  "description": "图片右键菜单：会话图片右键复制原图到剪贴板、另存为到本地",
   "keywords": [
     "dsh",
     "dsh-plugin",
@@ -15,7 +15,7 @@
   "author": "chenjietao",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/chenjietao/dsh-plugin-image-ctx-menu.git"
   },
   "type": "module",
   "main": "lib/index.js",
