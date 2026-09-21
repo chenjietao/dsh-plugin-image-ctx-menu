@@ -1,0 +1,6 @@
+# dsh-plugin-image-ctx-menu 自带的 composition 层。
+# 被 profile 安装后，dsh 按 bundles 顺序应用此层：
+# 在空根上插入 dsh-image-ctx-menu 插件行（self 包引用，走已安装代码）。
+- insert:
+    - id: dsh-image-ctx-menu
+      name: dsh-plugin-image-ctx-menu
