@@ -1,4 +1,11 @@
-/** `image-ctx-menu` 命名空间的中英双语词典。 */
+/** `image-ctx-menu` 命名空间的中英双语词典。
+ *
+ * 语言策略：`en` 是默认语言（国际化兜底，各国用户都看英文，不会有语言障碍）；
+ * 只有简体中文环境才用 `zh`。桌面端有 locale 服务时由 DSH 的 active locale
+ * 决定（zh 环境 active 为 zh，其余为 en，未覆盖的第三语言经 fallback 链
+ * 最终也落到 en）；无 locale 服务的极简 composition 下由
+ * {@link resolveStandaloneLang} 按浏览器语言做同样的判断。
+ */
 
 /** 本插件拥有的 locale 命名空间。 */
 export const NS = 'image-ctx-menu'
@@ -37,3 +44,24 @@ export const en: Record<ImageCtxMenuKey, string> = {
 
 /** `image-ctx-menu` 命名空间的 key 域（zh 为源头）。 */
 export type ImageCtxMenuKey = keyof typeof zh
+
+/**
+ * 无 locale 服务时的独立语言判断：仅简体中文用 zh，其余一律 en。
+ *
+ * 覆盖 zh-Hans / zh-CN / zh-SG 等简体中文标签；zh-HK / zh-TW 等繁体中文
+ * 走默认 en（本插件暂无繁体词典，英文比错误的简体更合适）。
+ * @param languages - 按优先级排序的浏览器语言标签（如 navigator.languages）。
+ * @returns 'zh' 或 'en'。
+ */
+export function resolveStandaloneLang(languages: readonly string[]): 'zh' | 'en' {
+  for (const tag of languages) {
+    const lower = tag.toLowerCase()
+    if (lower === 'zh' || lower.startsWith('zh-')) {
+      const region = lower.split('-')[1] ?? ''
+      // 繁体中文地区：hk/tw/mo 走 en；其余（cn/sg/hans/无地区）走 zh。
+      if (region === 'hk' || region === 'tw' || region === 'mo' || lower.includes('hant')) continue
+      return 'zh'
+    }
+  }
+  return 'en'
+}

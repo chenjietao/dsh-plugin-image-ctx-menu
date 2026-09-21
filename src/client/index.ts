@@ -9,7 +9,7 @@
  */
 import type { Context as ClientContext } from '@deepseek-ai/cordis'
 import { blobToPngBlob, loadBlob } from './blob.ts'
-import { NS, en, zh, type ImageCtxMenuKey } from './locales.ts'
+import { NS, en, resolveStandaloneLang, zh, type ImageCtxMenuKey } from './locales.ts'
 import { guessExtFromSrc, guessMimeKey, sanitizeName, stamp } from './naming.ts'
 import { css, insertStyles } from './styles.ts'
 
@@ -66,13 +66,25 @@ export function apply(ctx: ClientContext): void {
       }
     }, 'image-ctx-menu: dictionaries')
   }
+  // 独立兜底语言：仅简体中文用 zh，其余一律 en（国际化默认）。
+  // 有 locale 服务时 bind 按 DSH active locale 解析，未覆盖的第三语言经
+  // fallback 链落到 en；无 locale 服务时按浏览器语言做同样的判断。
+  const standaloneLang: 'zh' | 'en' = (() => {
+    try {
+      const languages = navigator.languages ?? [navigator.language]
+      return resolveStandaloneLang(languages)
+    } catch {
+      return 'en'
+    }
+  })()
+  const fallbackDict = standaloneLang === 'zh' ? zh : en
   const t = (key: ImageCtxMenuKey): string => {
     try {
       if (locale) return locale.bind(NS)(key)
     } catch {
-      // 词典尚未注册时回退到中文原文。
+      // 词典尚未注册时回退到独立判断的词典。
     }
-    return zh[key]
+    return fallbackDict[key]
   }
 
   const later = (callback: () => void, delay: number): (() => void) => {
@@ -266,7 +278,7 @@ export function apply(ctx: ClientContext): void {
   const openMenu = (x: number, y: number, img: HTMLImageElement): void => {
     closeMenu()
     const src = img.currentSrc || img.src
-    const label = img.alt || t('save.fallbackName')
+    const label = img.alt || fallbackDict['save.fallbackName']
     if (!src) return
     menuImg = img
     const menu = document.createElement('div')

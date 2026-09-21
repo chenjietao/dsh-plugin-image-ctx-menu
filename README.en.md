@@ -7,7 +7,7 @@ Right-click enhancement for session images: right-click any session image (thumb
 - **Copy image**: writes the original image bytes to the clipboard (lossless, not a screenshot) via `clipboard.write` inside the click gesture; non-PNG images are transcoded automatically.
 - **Save image as…**: prefers the `showSaveFilePicker` system file picker; falls back to `a[download]` where unsupported.
 
-Copy lives in the `image-ctx-menu` locale namespace with Chinese and English dictionaries that follow the DSH app language.
+Copy lives in the `image-ctx-menu` locale namespace: Simplified Chinese environments use the Chinese dictionary, everything else defaults to English (so no user faces an unreadable language).
 
 ## Install
 

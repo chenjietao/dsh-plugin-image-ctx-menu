@@ -5,7 +5,7 @@
 import { describe, expect, it } from 'vitest'
 import { guessExtFromSrc, guessMimeKey, sanitizeName, stamp } from '../src/client/naming.ts'
 import { dataURLToBlob } from '../src/client/blob.ts'
-import { en, zh } from '../src/client/locales.ts'
+import { en, resolveStandaloneLang, zh } from '../src/client/locales.ts'
 
 describe('sanitizeName', () => {
   it('清理非法字符并截断', () => {
@@ -55,5 +55,32 @@ describe('dataURLToBlob', () => {
 describe('locales', () => {
   it('中英 key 完全一致', () => {
     expect(Object.keys(en).sort()).toEqual(Object.keys(zh).sort())
+  })
+})
+
+describe('resolveStandaloneLang', () => {
+  it('简体中文用 zh', () => {
+    expect(resolveStandaloneLang(['zh-CN', 'en'])).toBe('zh')
+    expect(resolveStandaloneLang(['zh-SG'])).toBe('zh')
+    expect(resolveStandaloneLang(['zh-Hans-CN'])).toBe('zh')
+    expect(resolveStandaloneLang(['zh'])).toBe('zh')
+  })
+
+  it('其余语言默认 en', () => {
+    expect(resolveStandaloneLang(['en-US'])).toBe('en')
+    expect(resolveStandaloneLang(['ja-JP'])).toBe('en')
+    expect(resolveStandaloneLang(['fr-FR', 'en'])).toBe('en')
+    expect(resolveStandaloneLang([])).toBe('en')
+  })
+
+  it('繁体中文走默认 en', () => {
+    expect(resolveStandaloneLang(['zh-TW'])).toBe('en')
+    expect(resolveStandaloneLang(['zh-HK'])).toBe('en')
+    expect(resolveStandaloneLang(['zh-Hant'])).toBe('en')
+  })
+
+  it('优先级按浏览器语言顺序', () => {
+    expect(resolveStandaloneLang(['ja-JP', 'zh-CN'])).toBe('zh')
+    expect(resolveStandaloneLang(['zh-TW', 'zh-CN'])).toBe('zh')
   })
 })
