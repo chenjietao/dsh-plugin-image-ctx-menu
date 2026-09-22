@@ -13,22 +13,16 @@ import { NS, en, resolveStandaloneLang, zh, type ImageCtxMenuKey } from './local
 import { guessExtFromSrc, guessMimeKey, sanitizeName, stamp } from './naming.ts'
 import { css, insertStyles } from './styles.ts'
 
-/** locale 字典类型：与 LocaleNamespaceMap 的声明保持一致。 */
+/** 本插件 locale 命名空间的字典类型。 */
 export type ImageCtxMenuDict = Record<ImageCtxMenuKey, string>
 
-declare module '@deepseek-ai/cordis' {
-  interface Context {
-    /** 可选的 locale 服务（桌面版提供，中英词典挂在这里）。 */
-    locale?: {
-      register(ns: string, locale: string, dict: Record<string, string>): () => void
-      bind(ns: string): (key: string, params?: Record<string, unknown>) => string
-    }
-    /** 可选的 timer 服务（桌面版提供，用于 toast 自动关闭）。 */
-    timeout?(callback: () => void, delay: number): () => void
-  }
+/** locale 服务的最小形状（只用 register/bind，不依赖具体包类型）。 */
+interface LocaleFace {
+  register(ns: string, locale: string, dict: Record<string, string>): () => void
+  bind(ns: string): (key: string, params?: Record<string, unknown>) => string
 }
 
-/** 本插件需要的浏览器能力（注入声明）。 */
+/** 本插件无硬依赖：locale 可选（ctx.get），定时器直接用 window。 */
 export const inject: readonly string[] = []
 
 /** showSaveFilePicker 的最小类型（标准库未收录时使用）。 */
@@ -54,7 +48,7 @@ export function apply(ctx: ClientContext): void {
 
   insertStyles()
 
-  const locale = ctx.locale
+  const locale = ctx.get('locale') as LocaleFace | undefined
   if (locale) {
     ctx.effect(() => {
       const disposers = [
@@ -88,7 +82,6 @@ export function apply(ctx: ClientContext): void {
   }
 
   const later = (callback: () => void, delay: number): (() => void) => {
-    if (ctx.timeout) return ctx.timeout(callback, delay)
     const handle = window.setTimeout(callback, delay)
     return () => { window.clearTimeout(handle) }
   }
