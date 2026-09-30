@@ -1,6 +1,6 @@
 {
   "name": "dsh-plugin-image-ctx-menu",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "图片右键菜单：会话图片右键复制原图到剪贴板、另存为到本地",
   "keywords": [
     "dsh",
@@ -55,16 +55,10 @@
     }
   },
   "peerDependencies": {
-    "@deepseek-ai/cordis": "^4.0.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "@deepseek-ai/cordis": "^4.0.0"
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "^4.0.0",
-    "@types/react": "~18.3.1",
-    "@types/react-dom": "~18.3.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
     "tsdown": "^0.15.0",
     "typescript": "~5.9.0",
     "vitest": "^3.2.7"

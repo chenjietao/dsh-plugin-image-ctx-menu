@@ -9,6 +9,14 @@ Right-click enhancement for session images: right-click any session image (thumb
 
 Copy lives in the `image-ctx-menu` locale namespace: Simplified Chinese environments use the Chinese dictionary, everything else defaults to English (so no user faces an unreadable language).
 
+## Preview
+
+![Preview](preview.png)
+
+## Dependencies
+
+This plugin **depends only on `@deepseek-ai/cordis`** (zero runtime imports after compilation — the entire bundle is self-contained). It does not use React, DSH internal UI components, or other volatile modules. DSH version upgrades have virtually no impact on this plugin: the APIs it calls — `ctx.effect()`, `ctx.get()`, and `window.__ModuleLoader__.load()` — are all core stable Cordis / DSH interfaces. See [package.json](package.json) `peerDependencies`.
+
 ## Install
 
 ```sh

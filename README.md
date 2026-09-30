@@ -9,6 +9,14 @@
 
 文案走 `image-ctx-menu` locale 命名空间：仅简体中文环境用中文词典，其余语言一律默认英文（国际化兜底，避免第三语言用户面对看不懂的中文）。
 
+## 功能预览
+
+![功能预览](preview.png)
+
+## 依赖说明
+
+本插件**仅依赖 `@deepseek-ai/cordis`**（编译后零运行时 import，所有逻辑完全自包含于 bundle），不使用 React、DSH 内部 UI 组件等易变模块。DSH 版本升级基本不影响本插件运行——所调用的 `ctx.effect()`、`ctx.get()` 和 `window.__ModuleLoader__.load()` 均为 Cordis / DSH 核心稳定 API。详见 [package.json](package.json) 的 `peerDependencies`。
+
 ## 安装
 
 ```sh
