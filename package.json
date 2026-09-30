@@ -1,6 +1,6 @@
 {
   "name": "dsh-plugin-image-ctx-menu",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "图片右键菜单：会话图片右键复制原图到剪贴板、另存为到本地",
   "keywords": [
     "dsh",
